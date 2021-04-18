@@ -1,5 +1,8 @@
 <template>
-  <div class="chat_info">{{ chat_info }}</div>
+  <div class="chat_info">
+    {{ chat_info }}
+    Here
+  </div>
 </template>
 
 <script>

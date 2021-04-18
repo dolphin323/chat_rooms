@@ -81,6 +81,7 @@ export const JOIN_ROOM = gql`mutation join($id:ID!) {
       name
       lastMessages{
         id
+        timestamp
         author{
           id 
           username

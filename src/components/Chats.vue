@@ -2,7 +2,7 @@
   <div class="chats_block">
     <div class="chats">
       <ChatList @chat-clicked="ChatInfoProps" />
-      <Chat />
+      <Chat v-bind:messages="messages" />
       <ChatInfo />
     </div>
   </div>
@@ -16,6 +16,11 @@ import { LEAVE_ROOM } from "@/graphql/graphql.js";
 
 export default {
   name: "Chats",
+  data() {
+    return {
+      messages: [],
+    };
+  },
   components: {
     ChatList,
     Chat,
@@ -23,11 +28,10 @@ export default {
   },
   methods: {
     async ChatInfoProps(data) {
-      console.log(data);
-      const leaved_room = await this.$apollo.mutate({
+      this.messages = data.data.joinRoom.lastMessages;
+      await this.$apollo.mutate({
         mutation: LEAVE_ROOM,
       });
-      console.log(leaved_room);
     },
   },
 };
@@ -55,13 +59,13 @@ export default {
   transform: translate(-50%, -50%);
   margin-top: 40px;
 }
-
 .chats {
   display: grid;
   grid-template-areas: "chat_list chat chat_info";
-  grid-template-rows: 60px 1fr 60px;
-  grid-template-columns: 20% 1fr 15%;
+  grid-template-rows: 100%;
+  grid-template-columns: 250px 1fr 350px;
   grid-gap: 10px;
   background-color: white;
+  height: 100%;
 }
 </style>

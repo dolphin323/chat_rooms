@@ -10,6 +10,9 @@
       <div class="link_registration">
         <router-link to="/registration">Sign up</router-link>
       </div>
+      <div class="link_logout">
+        <router-link to="/login">Logout</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -28,12 +31,29 @@ export default {
   color: white;
   font-size: 30px;
   display: flex;
+  height: 35px;
 }
 .right_btn {
   display: flex;
   justify-content: end;
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 .left_logo img {
   width: 30px;
+}
+.link_login,
+.link_registration,
+.link_logout {
+  padding: 10px;
+  margin: 5px;
+  margin-top: 0px;
+  background-color: skyblue;
+  border-radius: 1em;
+}
+.right_btn a {
+  text-decoration: none;
+  font-size: x-large;
 }
 </style>

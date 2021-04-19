@@ -17,28 +17,23 @@
 
 <script>
 import ChatListElement from "./chat_list_components/ChatListElement";
-import { GET_ROOMS, JOIN_ROOM } from "@/graphql/graphql.js";
+import { JOIN_ROOM } from "@/graphql/graphql.js";
 
 export default {
   name: "ChatList",
+  props: ["rooms"],
   data() {
     return {
-      rooms: [],
       active: false,
     };
-  },
-  apollo: {
-    rooms: {
-      query: GET_ROOMS,
-    },
   },
   components: {
     ChatListElement,
   },
   methods: {
     async JoinChat(chat_id) {
-      // await this.$apollo.mutate({
-      //   mutation: LEAVE_ROOM,
+      // const user = await this.$apollo.query({
+      //   query: USER_INFO,
       // });
       const chat_info = await this.$apollo.mutate({
         mutation: JOIN_ROOM,

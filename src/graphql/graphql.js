@@ -51,8 +51,8 @@ export const ALL_USERS = gql`query users {
   }
 }`
 
-export const CREATE_ROOM = gql`mutation createRoom($name:String!) {
-    createRoom(name: $name) {
+export const CREATE_ROOM = gql`mutation createRoom($room_name:String!) {
+    createRoom(name: $room_name) {
       id
       name
       timestamp
@@ -78,10 +78,19 @@ export const DELETE_ROOM = gql`mutation deleteRoom($id:ID!) {
 export const JOIN_ROOM = gql`mutation join($id:ID!) {
     joinRoom(roomId: $id) {
       id
-      name
+      name   
+      owner {
+        id
+        username
+      }
+      members{
+          id
+          username
+        }
       lastMessages{
         id
         timestamp
+     
         author{
           id 
           username
@@ -103,6 +112,54 @@ export const CREATE_MESSAGE = gql`mutation createMessage($message:String!) {
     id
     timestamp
     author { username }
+    text
+  }
+}`
+
+export const SUB_ROOM_CREATED = gql`
+subscription roomCreated {
+  roomCreated {
+    id name owner {username}
+  }
+}`
+
+export const SUB_ROOM_UPDATED = gql`
+subscription roomUpdated {
+  roomUpdated {
+    id name owner {username}
+  }
+}`
+
+export const SUB_ROOM_DELETED = gql`
+subscription roomDeleted {
+  roomDeleted {
+    id name owner {username}
+  }
+}`
+
+export const SUB_ROOM_CHANGED = gql`
+subscription currentRoomChanged {
+  currentRoomChanged {
+    currentRoom { id name }
+  }
+}`
+
+export const SUB_MEMBER_JOINED = gql`
+subscription memberJoined {
+  memberJoined { id username }
+}`
+
+export const SUB_MEMBER_LEFT = gql`
+subscription memberLeft {
+  memberJoined { id username }
+}`
+
+export const SUB_MESSAGE_CREATED = gql`
+subscription messageCreated {
+  messageCreated {
+    id
+    timestamp
+    author { id username }
     text
   }
 }`

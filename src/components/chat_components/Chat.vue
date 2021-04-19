@@ -18,11 +18,6 @@
             v-model="message_text"
             placeholder="Enter your message"
           />
-          <!-- <div class="send_btn">
-            <button class="send_btn btn">
-              <img src="@/images/send_icon.png" alt="send Icon" />
-            </button>
-          </div> -->
         </form>
       </div>
     </div>
@@ -31,6 +26,7 @@
 
 <script>
 import ChatElement from "./chat_components/ChatElement";
+import { CREATE_MESSAGE } from "@/graphql/graphql.js";
 
 export default {
   name: "Chat",
@@ -44,9 +40,15 @@ export default {
     };
   },
   methods: {
-    SendMessage() {
+    async SendMessage() {
       if (this.message_text) {
-        console.log(this.message_text);
+        const data = await this.$apollo.mutate({
+          mutation: CREATE_MESSAGE,
+          variables: {
+            message: this.message_text,
+          },
+        });
+        console.log(data);
       }
     },
   },

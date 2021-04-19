@@ -25,6 +25,9 @@ export default {
 </script>
 
 <style scoped>
+.chat_list_element {
+  width: inherit;
+}
 .chat_list_element:hover,
 .info.true {
   background-color: rgb(242, 225, 245);
@@ -36,6 +39,8 @@ export default {
 }
 .chat_list_element .info span {
   padding-left: 10px;
+  font-size: x-large;
+  padding-top: 3px;
 }
 
 .chat_list_element .info {

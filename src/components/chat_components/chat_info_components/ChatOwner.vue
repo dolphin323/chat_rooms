@@ -2,16 +2,29 @@
   <div class="owner">
     <span class="owner_name">
       <img src="https://static.toiimg.com/photo/72975551.cms" alt="chat img" />
-      <span class="text">{{ owner_name }}</span></span
+      <span class="text"
+        >{{ owner.username }} {{ user_id === owner.id ? "(you)" : "" }}</span
+      ></span
     >
     <img src="@/images/star.png" alt="send Icon" />
   </div>
 </template>
 
 <script>
+//import { USER_INFO } from "@/graphql/graphql.js";
 export default {
   name: "ChatOwner",
-  props: ["owner_name"],
+  props: ["owner", "user_id"],
+  data() {
+    return {
+      me: {},
+    };
+  },
+  // apollo: {
+  //   me: {
+  //     query: USER_INFO,
+  //   },
+  // },
 };
 </script>
 <style scoped>

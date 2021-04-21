@@ -9,7 +9,7 @@
       >
         <header class="modal-header" id="modalTitle">
           <slot name="header">
-            Create chat
+            Rename chat
             <button
               type="button"
               class="btn-close"
@@ -30,10 +30,10 @@
             <button
               type="button"
               class="btn-green"
-              @click="CreateChat"
-              aria-label="Create chat"
+              @click="RenameChat"
+              aria-label="Rename chat"
             >
-              Create chat
+              Rename chat
             </button>
             <button
               type="button"
@@ -50,9 +50,9 @@
   </transition>
 </template>
 <script>
-import { CREATE_ROOM } from "@/graphql/graphql.js";
+import { UPDATE_ROOM, USER_INFO } from "@/graphql/graphql.js";
 export default {
-  name: "ModalCreateChat",
+  name: "ModalRenameChat",
   data() {
     return {
       chat_name: "",
@@ -63,12 +63,17 @@ export default {
     close() {
       this.$emit("close");
     },
-    async CreateChat() {
+    async RenameChat() {
       if (this.chat_name) {
+        console.log(this.chat_name);
+        const user_info = await this.$apollo.query({
+          query: USER_INFO,
+        });
         await this.$apollo.mutate({
-          mutation: CREATE_ROOM,
+          mutation: UPDATE_ROOM,
           variables: {
-            room_name: this.chat_name,
+            id: user_info.data.me.currentRoom.id,
+            name: this.chat_name,
           },
         });
         this.chat_name = "";
@@ -97,7 +102,7 @@ export default {
 
 .modal {
   background: #ffffff;
-  box-shadow: 2px 2px 20px 1px;
+  box-shadow: 2px 2px 20px 1px aliceblue;
   overflow-x: auto;
   display: flex;
   flex-direction: column;

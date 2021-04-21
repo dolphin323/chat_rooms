@@ -19,6 +19,9 @@ const defaultOptions = {
   tokenName: AUTH_TOKEN,
   // Enable Automatic Query persisting with Apollo Engine
   persisting: false,
+  // You can use `wss` for secure connection (recommended in production)
+  // Use `null` to disable subscriptions
+  wsEndpoint: process.env.VUE_APP_GRAPHQL_WS || 'ws://webprogbase-lab6-graphql.herokuapp.com/graphql',
   // Use websockets for everything (no HTTP)
   // You need to pass a `wsEndpoint` for this to work
   websocketsOnly: false,

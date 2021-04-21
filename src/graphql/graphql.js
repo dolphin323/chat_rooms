@@ -25,7 +25,25 @@ export const USER_INFO = gql`  query me {
       timestamp
       currentRoom {
         id
-        name
+        name   
+        owner {
+          id
+          username
+        }
+        members{
+            id
+            username
+          }
+        lastMessages{
+          id
+          timestamp
+       
+          author{
+            id 
+            username
+          }
+          text
+        }
       }
     }
   }`
@@ -34,6 +52,7 @@ export const GET_ROOMS = gql`query rooms {
     id
     name
     owner {
+      id
       username
     }
   }
@@ -111,7 +130,7 @@ export const CREATE_MESSAGE = gql`mutation createMessage($message:String!) {
   createMessage(text: $message) {
     id
     timestamp
-    author { username }
+    author {id username }
     text
   }
 }`
@@ -119,21 +138,21 @@ export const CREATE_MESSAGE = gql`mutation createMessage($message:String!) {
 export const SUB_ROOM_CREATED = gql`
 subscription roomCreated {
   roomCreated {
-    id name owner {username}
+    id name owner {id username}
   }
 }`
 
 export const SUB_ROOM_UPDATED = gql`
 subscription roomUpdated {
   roomUpdated {
-    id name owner {username}
+    id name owner {id username}
   }
 }`
 
 export const SUB_ROOM_DELETED = gql`
 subscription roomDeleted {
   roomDeleted {
-    id name owner {username}
+    id name owner {id username}
   }
 }`
 

@@ -4,8 +4,22 @@
       <div v-for="mess in messages" :key="mess.id">
         <ChatElement
           :mess="mess.text"
-          :messTime="mess.timestamp"
+          :messTime="
+            (() => {
+              norm_date = new Date(mess.timestamp);
+              return (
+                norm_date.getHours() +
+                ':' +
+                norm_date.getMinutes() +
+                ' ' +
+                norm_date.getDate() +
+                '/' +
+                (norm_date.getMonth() + 1)
+              );
+            })()
+          "
           :author="mess.author"
+          :user_id="user_id"
         />
       </div>
     </div>
@@ -26,29 +40,47 @@
 
 <script>
 import ChatElement from "./chat_components/ChatElement";
-import { CREATE_MESSAGE } from "@/graphql/graphql.js";
+import {
+  CREATE_MESSAGE,
+  SUB_MESSAGE_CREATED,
+  USER_INFO,
+} from "@/graphql/graphql.js";
 
 export default {
   name: "Chat",
   components: {
     ChatElement,
   },
-  props: ["messages"],
+  props: ["messages", "user_id"],
   data() {
     return {
       message_text: "",
+      me: {},
     };
+  },
+  apollo: {
+    me: {
+      query: USER_INFO,
+    },
+    $subscribe: {
+      create_rooms: {
+        query: SUB_MESSAGE_CREATED,
+        result({ data }) {
+          this.messages.push(data.messageCreated);
+        },
+      },
+    },
   },
   methods: {
     async SendMessage() {
       if (this.message_text) {
-        const data = await this.$apollo.mutate({
+        await this.$apollo.mutate({
           mutation: CREATE_MESSAGE,
           variables: {
             message: this.message_text,
           },
         });
-        console.log(data);
+        this.message_text = "";
       }
     },
   },

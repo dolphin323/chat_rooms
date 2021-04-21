@@ -9,6 +9,8 @@
           @join-chat="JoinChat"
           :chat_name="room.name"
           :chat_id="room.id"
+          :owner_id="room.owner.id"
+          :user_id="user_id"
         />
       </div>
     </div>
@@ -18,10 +20,11 @@
 <script>
 import ChatListElement from "./chat_list_components/ChatListElement";
 import { JOIN_ROOM } from "@/graphql/graphql.js";
+import { USER_INFO } from "../../graphql/graphql";
 
 export default {
   name: "ChatList",
-  props: ["rooms"],
+  props: ["rooms", "user_id"],
   data() {
     return {
       active: false,
@@ -32,15 +35,20 @@ export default {
   },
   methods: {
     async JoinChat(chat_id) {
-      // const user = await this.$apollo.query({
-      //   query: USER_INFO,
-      // });
       const chat_info = await this.$apollo.mutate({
         mutation: JOIN_ROOM,
         variables: {
           id: chat_id,
         },
       });
+      console.log("JOINED");
+      const user_info = await this.$apollo.query({
+        query: USER_INFO,
+      });
+
+      console.log(user_info);
+      console.log("Current room");
+      console.log(user_info.data.me.currentRoom);
       this.$emit("chat-clicked", {
         data: chat_info.data,
       });

@@ -1,14 +1,27 @@
 <template>
   <div class="chat_member">
     <img src="https://static.toiimg.com/photo/72975551.cms" alt="chat img" />
-    <span>{{ username }}</span>
+    <span
+      >{{ member.username }} {{ user_id === member.id ? "(you)" : "" }}</span
+    >
   </div>
 </template>
 
 <script>
+//import { USER_INFO } from "@/graphql/graphql.js";
 export default {
   name: "ChatMemberElement",
-  props: ["username"],
+  props: ["member", "user_id"],
+  data() {
+    return {
+      me: {},
+    };
+  },
+  // apollo: {
+  //   me: {
+  //     query: USER_INFO,
+  //   },
+  // },
 };
 </script>
 

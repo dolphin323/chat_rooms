@@ -62,7 +62,7 @@ export default {
               password: this.password,
             },
           });
-          onLogin(this.$apollo.provider.defaultClient, token.data.token);
+          await onLogin(this.$apollo.provider.defaultClient, token.data.token);
           this.$router.push("/chats");
         }
       } catch (err) {
@@ -73,7 +73,20 @@ export default {
 };
 </script>
 
-
+<style>
+.link_logout,
+.create_chat,
+.vertical {
+  display: none;
+}
+.link_login,
+.link_registration {
+  display: flex;
+}
+.footer {
+  display: block;
+}
+</style>
 
 
 <style scoped>

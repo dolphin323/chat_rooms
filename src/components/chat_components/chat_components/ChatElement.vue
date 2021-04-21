@@ -1,5 +1,5 @@
 <template>
-  <div class="mess_wrap">
+  <div class="mess_wrap" :class="user_id === author.id ? 'own_message' : ''">
     <div class="message">
       <div class="author">{{ author.username }}</div>
       <div class="text">{{ mess }}</div>
@@ -11,13 +11,18 @@
 <script>
 export default {
   name: "ChatElement",
-  props: ["mess", "author", "messTime"],
+  props: ["mess", "author", "messTime", "user_id"],
 };
 </script>
 
 <style scoped>
 .mess_wrap {
   width: inherit;
+  display: grid;
+  justify-content: left;
+}
+.mess_wrap.own_message {
+  justify-content: right;
 }
 .message {
   background-color: rgb(163, 149, 163);
@@ -26,5 +31,8 @@ export default {
   border-radius: 1em;
   overflow-wrap: anywhere;
   width: 200px;
+}
+.mess_wrap.own_message .message {
+  background-color: lavender;
 }
 </style>

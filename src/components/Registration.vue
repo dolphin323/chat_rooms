@@ -33,6 +33,8 @@
             requireds
           />
         </div>
+        <h2 v-if="!IsPasswordSame">Passwords are different</h2>
+        <h2 v-if="IsUserExists">Choose another login</h2>
         <div class="form_btn">
           <button class="registration_btn btn">Sign Up</button>
         </div>
@@ -42,8 +44,8 @@
 </template> 
 
 <script>
-import { CHECK_USERNAME } from "@/graphql/graphql";
-
+import { CHECK_USERNAME, LOGIN, REGISTER } from "@/graphql/graphql";
+import { onLogin } from "./../vue-apollo";
 export default {
   name: "Registration",
   data() {
@@ -51,6 +53,8 @@ export default {
       login: "",
       password: "",
       confirm_password: "",
+      IsUserExists: false,
+      IsPasswordSame: true,
     };
   },
   methods: {
@@ -64,26 +68,32 @@ export default {
         });
         if (answer.data.exists) {
           console.log("change name");
+          this.IsUserExists = true;
+          this.IsPasswordSame = true;
         } else if (this.password !== this.confirm_password) {
           console.log("passwords are different");
+          this.IsPasswordSame = false;
+          this.IsUserExists = false;
         } else {
-          // const user_data = await this.$apollo.query({
-          //   query: REGISTER,
-          //   variables: {
-          //     username: this.login,
-          //     username: this.password,
-          //   },
-          // });
-          console.log("Registrated!!");
-          // const token = await this.$apollo.query({
-          //   query: LOGIN,
-          //   variables: {
-          //     username: this.login,
-          //     password: this.password,
-          //   },
-          // });
-          // onLogin(this.$apollo.provider.defaultClient, token.data.token);
-          // this.$router.push("/chats");
+          this.IsUserExists = false;
+          this.IsPasswordSame = true;
+          await this.$apollo.query({
+            query: REGISTER,
+            variables: {
+              username: this.login,
+              password: this.password,
+            },
+          });
+          //console.log("Registrated!!");
+          const token = await this.$apollo.query({
+            query: LOGIN,
+            variables: {
+              username: this.login,
+              password: this.password,
+            },
+          });
+          onLogin(this.$apollo.provider.defaultClient, token.data.token);
+          this.$router.push("/chats");
         }
       } catch (err) {
         console.log(err);
@@ -94,7 +104,12 @@ export default {
 </script>
 
 
-
+<style>
+.link_logout,
+.create_chat {
+  display: none;
+}
+</style>
 
 <style scoped>
 .registration .block {

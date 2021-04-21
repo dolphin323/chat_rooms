@@ -1,10 +1,10 @@
 <template>
   <div class="chat_info">
     <h2>Chat creator</h2>
-    <ChatOwner :owner_name="owner.username" />
+    <ChatOwner :owner="owner" :user_id="user_id" />
     <h2>Chat members</h2>
     <div v-for="member in members" :key="member.id">
-      <ChatMemberElement :username="member.username" />
+      <ChatMemberElement :member="member" :user_id="user_id" />
     </div>
   </div>
 </template>
@@ -12,13 +12,19 @@
 <script>
 import ChatMemberElement from "./chat_info_components/ChatMemberElement";
 import ChatOwner from "./chat_info_components/ChatOwner";
+
 export default {
   name: "ChatInfo",
   components: {
     ChatMemberElement,
     ChatOwner,
   },
-  props: ["members", "owner"],
+  props: ["members", "owner", "user_id"],
+  data() {
+    return {
+      me: {},
+    };
+  },
 };
 </script>
 

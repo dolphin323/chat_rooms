@@ -17,14 +17,12 @@
 </template>
 
 <script>
-//import { USER_INFO } from "@/graphql/graphql";
 export default {
   name: "ChatListElement",
   props: ["chat_name", "chat_id", "owner_id", "user_id"],
   data() {
     return {
       active: false,
-      me: {},
       color: "",
     };
   },

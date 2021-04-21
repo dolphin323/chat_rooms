@@ -22,23 +22,19 @@
             </div>
           </div>
           <div class="chat_buttons">
-            <button class="left_chat" @click="LeftChat" v-if="!display_list">
-              Left chat
-            </button>
-            <button
-              class="delete_chat"
-              @click="DeleteChat"
-              v-if="display_owner_buttons"
-            >
-              Delete chat
-            </button>
-            <button
-              class="rename_chat btn"
-              @click="showModal"
-              v-if="display_owner_buttons"
-            >
-              Rename chat
-            </button>
+            <div class="outer" v-if="!display_list">
+              <button class="left_chat" @click="LeftChat">Left chat</button>
+            </div>
+            <div class="outer" v-if="display_owner_buttons">
+              <button class="delete_chat" @click="DeleteChat">
+                Delete chat
+              </button>
+            </div>
+            <div class="outer" v-if="display_owner_buttons">
+              <button class="rename_chat btn" @click="showModal">
+                Rename chat
+              </button>
+            </div>
           </div>
         </div>
         <Chat v-bind:messages="messages" v-if="display_chat" :user_id="me.id" />
@@ -68,9 +64,10 @@ import {
   GET_ROOMS,
   SUB_ROOM_CREATED,
   SUB_ROOM_DELETED,
-  // SUB_MEMBER_JOINED,
-  SUB_ROOM_CHANGED,
+  SUB_MEMBER_JOINED,
+  //SUB_ROOM_CHANGED,
   SUB_ROOM_UPDATED,
+  SUB_MEMBER_LEFT,
   //UPDATE_ROOM,
 } from "@/graphql/graphql.js";
 
@@ -89,7 +86,7 @@ export default {
       isModalVisible: false,
       current_room_name: "",
       width_box: 0,
-      width_box_text: 0,
+      width_box_text: 300,
     };
   },
   apollo: {
@@ -113,29 +110,51 @@ export default {
       rename_room: {
         query: SUB_ROOM_UPDATED,
         result({ data }) {
-          console.log(data);
-          this.current_room_name = data.roomUpdated.name;
+          if (data.roomUpdated.owner.id === this.me.id) {
+            this.current_room_name = data.roomUpdated.name;
+          }
+          const new_rooms = this.rooms.map((item) => {
+            item.id === data.roomUpdated.id ? (item = data.roomUpdated) : item;
+            return item;
+          });
+          this.rooms = new_rooms;
         },
       },
-      change_room: {
-        query: SUB_ROOM_CHANGED,
+      joined_room: {
+        query: SUB_MEMBER_JOINED,
         result({ data }) {
-          console.log("Here change");
-          console.log(data);
-          // const user_info = await this.$apollo.query({
-          //   query: USER_INFO,
-          // });
-          // const info = data.data.joinRoom;
-          // this.messages = info.lastMessages;
-          // this.members = info.members;
-          // this.owner = info.owner;
-          // if (user_info.data.me.id === this.owner.id) {
-          //   this.display_owner_buttons = true;
-          // }
-          // this.display_chat = true;
-          // this.display_list = false;
+          this.members.push(data.memberJoined);
         },
       },
+      left_room: {
+        query: SUB_MEMBER_LEFT,
+        result({ data }) {
+          let right_index = -1;
+          this.members.forEach((item, index) =>
+            item.id === data.memberLeft.id ? (right_index = index) : ""
+          );
+          this.members.splice(right_index, 1);
+        },
+      },
+      // change_room: {
+      //   query: SUB_ROOM_CHANGED,
+      //   result({ data }) {
+      //     console.log("Here change");
+      //     console.log(data);
+      // const user_info = await this.$apollo.query({
+      //   query: USER_INFO,
+      // });
+      // const info = data.data.joinRoom;
+      // this.messages = info.lastMessages;
+      // this.members = info.members;
+      // this.owner = info.owner;
+      // if (user_info.data.me.id === this.owner.id) {
+      //   this.display_owner_buttons = true;
+      // }
+      // this.display_chat = true;
+      // this.display_list = false;
+      // },
+      //},
     },
   },
   components: {
@@ -156,6 +175,7 @@ export default {
     });
     if (me.data.me.currentRoom) {
       await this.OpenChat(me);
+      this.width_box_text = this.$refs.infoBoxText.clientWidth;
     }
     const rooms = await this.$apollo.query({
       query: GET_ROOMS,
@@ -172,10 +192,6 @@ export default {
       this.isModalVisible = false;
     },
     async LeftChat() {
-      const user_info = await this.$apollo.query({
-        query: USER_INFO,
-      });
-      console.log(user_info);
       await this.$apollo.mutate({
         mutation: LEAVE_ROOM,
       });
@@ -200,12 +216,14 @@ export default {
     },
     async OpenChat(data) {
       const user_info = await this.$apollo.query({
+        fetchPolicy: "no-cache",
         query: USER_INFO,
       });
       this.ChangeData(user_info, data.data.me.currentRoom);
     },
     async ChatInfoProps(data) {
       const user_info = await this.$apollo.query({
+        fetchPolicy: "no-cache",
         query: USER_INFO,
       });
       this.ChangeData(user_info, data.data.joinRoom);
@@ -226,6 +244,43 @@ export default {
 </script>
 
 <style>
+.outer {
+  padding: 2px;
+  border-radius: 1em;
+  width: 60%;
+  background: linear-gradient(
+    45deg,
+    #fb0094,
+    #00f,
+    #0f6,
+    #ff0,
+    #f00,
+    #fb0094,
+    #00f,
+    #0f0,
+    #ff0,
+    #f00
+  );
+  opacity: 0.95;
+  box-shadow: 0 0 10px rgb(0 0 0 / 50%);
+  margin-bottom: 10px;
+}
+.outer:hover {
+  opacity: 1;
+}
+
+/* .outer:hover {
+  animation: rotate 1.5s linear infinite;
+}
+@keyframes rotate {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+} */
+
 #two {
   padding-left: 20px;
   padding-right: 15px;
@@ -341,22 +396,24 @@ export default {
   top: 20%;
   overflow: hidden;
 }
-.left_chat,
+/* .left_chat,
 .delete_chat {
   margin-bottom: 5px;
-}
+} */
 .left_chat,
 .delete_chat,
 .rename_chat {
   display: flex;
   justify-content: center;
-  width: 60%;
+  width: 100%;
   font-size: inherit;
-  border: 2px solid;
-  background-color: #cabdd5;
+  /* border: 2px solid; */
+  background-color: #323232;
   padding: 15px;
   border-radius: 1em;
+  color: white;
 }
+
 .footer {
   display: none;
 }

@@ -85,8 +85,6 @@ export default {
   },
   watch: {
     $route(to) {
-      console.log(to);
-      // console.log(from)
       if (to.path === "/login" || to.path === "/registration") {
         this.isLoginButtonVisible = true;
         this.isRegistrationButtonVisible = true;
@@ -100,8 +98,8 @@ export default {
         this.isLogoutButtonVisible = true;
         console.log("Chats");
       } else {
-        this.isLoginButtonVisible = false;
-        this.isRegistrationButtonVisible = false;
+        this.isLoginButtonVisible = true;
+        this.isRegistrationButtonVisible = true;
         this.isCreateButtonVisible = false;
         this.isLogoutButtonVisible = false;
       }

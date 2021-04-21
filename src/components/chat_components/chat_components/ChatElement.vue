@@ -23,6 +23,7 @@ export default {
 }
 .mess_wrap.own_message {
   justify-content: right;
+  text-align: end;
 }
 .message {
   background-color: rgb(163, 149, 163);
@@ -34,5 +35,6 @@ export default {
 }
 .mess_wrap.own_message .message {
   background-color: lavender;
+  margin-right: 1px;
 }
 </style>

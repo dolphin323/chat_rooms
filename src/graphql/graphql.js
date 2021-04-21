@@ -174,7 +174,7 @@ subscription memberJoined {
 
 export const SUB_MEMBER_LEFT = gql`
 subscription memberLeft {
-  memberJoined { id username }
+  memberLeft { id username }
 }`
 
 export const SUB_MESSAGE_CREATED = gql`

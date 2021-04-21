@@ -65,11 +65,10 @@ export default {
     },
     async RenameChat() {
       if (this.chat_name) {
-        console.log(this.chat_name);
         const user_info = await this.$apollo.query({
+          fetchPolicy: "no-cache",
           query: USER_INFO,
         });
-        console.log(user_info);
         await this.$apollo.mutate({
           mutation: UPDATE_ROOM,
           variables: {
@@ -103,7 +102,7 @@ export default {
 
 .modal {
   background: #ffffff;
-  box-shadow: 2px 2px 20px 1px aliceblue;
+  box-shadow: 2px 2px 20px 1px;
   overflow-x: auto;
   display: flex;
   flex-direction: column;
@@ -112,18 +111,20 @@ export default {
 .modal-header,
 .modal-footer {
   padding: 15px;
-  display: flex;
 }
 
 .modal-header {
   border-bottom: 1px solid #eeeeee;
-  color: #4aae9b;
+  color: #615061;
   justify-content: space-between;
+  display: inline-flex;
+  font-size: x-large;
 }
 
 .modal-footer {
   border-top: 1px solid #eeeeee;
   justify-content: flex-end;
+  display: flex;
 }
 
 .modal-body {
@@ -134,18 +135,19 @@ export default {
 .btn-close {
   border: none;
   font-size: 20px;
-  padding: 20px;
   cursor: pointer;
   font-weight: bold;
-  color: #4aae9b;
+  color: #615061;
   background: transparent;
 }
 
 .btn-green {
   color: white;
-  background: #4aae9b;
-  border: 1px solid #4aae9b;
-  border-radius: 2px;
+  background: #615061;
+  border: 1px solid #615061;
+  padding: 10px;
+  border-radius: 1em;
+  margin: 3px;
 }
 .chat_name_input {
   width: 90%;

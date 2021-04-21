@@ -14,7 +14,6 @@
 <script>
 import ChatMemberElement from "./chat_info_components/ChatMemberElement";
 import ChatOwner from "./chat_info_components/ChatOwner";
-
 export default {
   name: "ChatInfo",
   components: {
@@ -22,11 +21,6 @@ export default {
     ChatOwner,
   },
   props: ["members", "owner", "user_id"],
-  data() {
-    return {
-      me: {},
-    };
-  },
 };
 </script>
 

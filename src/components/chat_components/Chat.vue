@@ -60,6 +60,7 @@ export default {
   },
   apollo: {
     me: {
+      fetchPolicy: "no-cache",
       query: USER_INFO,
     },
     $subscribe: {

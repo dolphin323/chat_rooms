@@ -8,20 +8,9 @@
 </template>
 
 <script>
-//import { USER_INFO } from "@/graphql/graphql.js";
 export default {
   name: "ChatMemberElement",
   props: ["member", "user_id"],
-  data() {
-    return {
-      me: {},
-    };
-  },
-  // apollo: {
-  //   me: {
-  //     query: USER_INFO,
-  //   },
-  // },
 };
 </script>
 

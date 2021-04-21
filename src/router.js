@@ -20,6 +20,6 @@ export default new Router({
             path: '/chats',
             component: () => import('@/components/Chats')
         },
-
+        { path: "*", component: () => import('@/components/PageNotFound') }
     ]
 })

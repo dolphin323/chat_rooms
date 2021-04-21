@@ -1,10 +1,18 @@
 <template>
   <div class="chat_list_element">
     <div class="info" @click="$emit('join-chat', chat_id)">
-      <img src="https://static.toiimg.com/photo/72975551.cms" alt="chat img" />
+      <div class="chat_photo" :style="'background-color: ' + color">
+        {{ chat_name[0] }}
+      </div>
       <span>{{ chat_name }}</span>
     </div>
-    <img src="@/images/star.png" alt="send Icon" v-if="user_id === owner_id" />
+    <div>
+      <img
+        src="@/images/star.png"
+        alt="send Icon"
+        v-if="user_id === owner_id"
+      />
+    </div>
   </div>
 </template>
 
@@ -17,24 +25,33 @@ export default {
     return {
       active: false,
       me: {},
+      color: "",
     };
   },
-  // async created() {
-  //   const me = await this.$apollo.query({
-  //     query: USER_INFO,
-  //   });
-  //   this.me123 = me.data.me;
-  // },
+  created() {
+    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    this.color = "#" + randomColor;
+  },
 };
 </script>
 
 <style scoped>
+.chat_photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.85;
+  border: 1px solid;
+}
 .chat_list_element {
   width: inherit;
-  display: flex;
-  justify-content: space-between;
   overflow: hidden;
   margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
 }
 .chat_list_element:hover,
 .info.true {
@@ -49,9 +66,13 @@ export default {
   padding-left: 10px;
   font-size: x-large;
   padding-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 150px;
 }
 
 .chat_list_element .info {
-  display: inline-flex;
+  display: flex;
+  justify-content: space-between;
 }
 </style>

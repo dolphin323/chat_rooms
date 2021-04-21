@@ -9,26 +9,37 @@
           v-bind:rooms="rooms"
           :user_id="me.id"
         />
-
-        <div class="no_list">
-          <h2 v-if="!display_list">{{ current_room_name }}</h2>
-          <button class="left_chat" @click="LeftChat" v-if="!display_list">
-            Left chat
-          </button>
-          <button
-            class="delete_chat"
-            @click="DeleteChat"
-            v-if="display_owner_buttons"
-          >
-            Delete chat
-          </button>
-          <button
-            class="rename_chat btn"
-            @click="showModal"
-            v-if="display_owner_buttons"
-          >
-            Rename chat
-          </button>
+        <div class="no_list" ref="infoBox">
+          <div v-if="!display_list">
+            <div id="two" class="text-container">
+              <span
+                ref="infoBoxText"
+                :class="width_box <= width_box_text ? 'animate' : ''"
+                >{{ current_room_name }}</span
+              >
+              <div class="fader fader-left"></div>
+              <div class="fader fader-right"></div>
+            </div>
+          </div>
+          <div class="chat_buttons">
+            <button class="left_chat" @click="LeftChat" v-if="!display_list">
+              Left chat
+            </button>
+            <button
+              class="delete_chat"
+              @click="DeleteChat"
+              v-if="display_owner_buttons"
+            >
+              Delete chat
+            </button>
+            <button
+              class="rename_chat btn"
+              @click="showModal"
+              v-if="display_owner_buttons"
+            >
+              Rename chat
+            </button>
+          </div>
         </div>
         <Chat v-bind:messages="messages" v-if="display_chat" :user_id="me.id" />
         <ChatInfo
@@ -77,12 +88,11 @@ export default {
       display_owner_buttons: false,
       isModalVisible: false,
       current_room_name: "",
+      width_box: 0,
+      width_box_text: 0,
     };
   },
   apollo: {
-    rooms: {
-      query: GET_ROOMS,
-    },
     $subscribe: {
       create_rooms: {
         query: SUB_ROOM_CREATED,
@@ -93,8 +103,11 @@ export default {
       delete_room: {
         query: SUB_ROOM_DELETED,
         result({ data }) {
-          const index = this.rooms.indexOf(data.roomDeleted);
-          this.rooms.splice(index, 1);
+          let right_index = -1;
+          this.rooms.forEach((item, index) =>
+            item.id === data.roomDeleted.id ? (right_index = index) : ""
+          );
+          this.rooms.splice(right_index, 1);
         },
       },
       rename_room: {
@@ -107,7 +120,7 @@ export default {
       change_room: {
         query: SUB_ROOM_CHANGED,
         result({ data }) {
-          console.log("Here");
+          console.log("Here change");
           console.log(data);
           // const user_info = await this.$apollo.query({
           //   query: USER_INFO,
@@ -131,17 +144,25 @@ export default {
     ChatInfo,
     ModalChangeRoomName,
   },
+  async updated() {
+    if (this.$refs.infoBoxText) {
+      this.width_box_text = this.$refs.infoBoxText.clientWidth;
+    }
+  },
   async created() {
     const me = await this.$apollo.query({
       fetchPolicy: "no-cache",
       query: USER_INFO,
     });
-    console.log(`me`, me.data.me);
     if (me.data.me.currentRoom) {
       await this.OpenChat(me);
     }
-    console.log(`room`, me.data.me.currentRoom);
+    const rooms = await this.$apollo.query({
+      query: GET_ROOMS,
+    });
+    this.rooms = rooms.data.rooms;
     this.me = me.data.me;
+    this.width_box = this.$refs.infoBox.clientWidth;
   },
   methods: {
     showModal() {
@@ -181,24 +202,15 @@ export default {
       const user_info = await this.$apollo.query({
         query: USER_INFO,
       });
-      const info = data.data.me.currentRoom;
-      console.log(data);
-      this.messages = info.lastMessages;
-      this.members = info.members;
-      this.owner = info.owner;
-      this.current_room_name = info.name;
-      if (user_info.data.me.id === this.owner.id) {
-        this.display_owner_buttons = true;
-      }
-      this.display_chat = true;
-      this.display_list = false;
+      this.ChangeData(user_info, data.data.me.currentRoom);
     },
     async ChatInfoProps(data) {
       const user_info = await this.$apollo.query({
         query: USER_INFO,
       });
-
-      const info = data.data.joinRoom;
+      this.ChangeData(user_info, data.data.joinRoom);
+    },
+    ChangeData(user_info, info) {
       this.current_room_name = info.name;
       this.messages = info.lastMessages;
       this.members = info.members;
@@ -214,16 +226,108 @@ export default {
 </script>
 
 <style>
+#two {
+  padding-left: 20px;
+  padding-right: 15px;
+  overflow: hidden;
+}
+
+.text-container {
+  padding: 5px 10px;
+  min-width: 0;
+  font-size: 2rem;
+  color: #708090;
+  white-space: nowrap;
+  overflow: visible;
+  position: relative;
+  border: 1px solid #708090;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.text-container span {
+  display: inline-block;
+}
+
+.text-container .animate:hover {
+  position: relative;
+  animation: leftright 2s infinite alternate linear;
+}
+@keyframes leftright {
+  0%,
+  20% {
+    transform: translateX(0%);
+    left: 0%;
+  }
+  20%,
+  40% {
+    transform: translateX(-40%);
+    left: 40%;
+  }
+  40%,
+  60% {
+    transform: translateX(-60%);
+    left: 60%;
+  }
+  60%,
+  80% {
+    transform: translateX(-80%);
+    left: 80%;
+  }
+  80%,
+  100% {
+    transform: translateX(-100%);
+    left: 100%;
+  }
+}
+
+.fader {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 25px;
+}
+.fader.fader-left {
+  left: 0;
+  background: linear-gradient(
+    to left,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 1)
+  );
+}
+
+.fader.fader-right {
+  right: 0;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 1)
+  );
+}
+@media (max-width: 450px) {
+  .center {
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+/*  */
 .link_logout,
 .create_chat {
   display: flex;
 }
-.link_login,
-.link_registration {
-  display: none;
+.chat_buttons {
+  left: 20%;
+  position: relative;
+  margin-top: 20px;
 }
-.footer {
-  display: none;
+.no_list {
+  overflow: hidden;
+}
+.no_list:hover h2 {
+  position: inherit;
+  white-space: nowrap;
+  animation: floatText 5s infinite alternate ease-in-out;
 }
 .no_chat {
   position: absolute;
@@ -235,7 +339,7 @@ export default {
 .no_list {
   position: relative;
   top: 20%;
-  left: 15%;
+  overflow: hidden;
 }
 .left_chat,
 .delete_chat {

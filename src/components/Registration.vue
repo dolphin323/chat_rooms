@@ -105,10 +105,10 @@ export default {
 
 
 <style>
-.link_logout,
+/* .link_logout,
 .create_chat {
   display: none;
-}
+} */
 </style>
 
 <style scoped>

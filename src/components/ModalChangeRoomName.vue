@@ -69,6 +69,7 @@ export default {
         const user_info = await this.$apollo.query({
           query: USER_INFO,
         });
+        console.log(user_info);
         await this.$apollo.mutate({
           mutation: UPDATE_ROOM,
           variables: {

@@ -74,11 +74,11 @@ export default {
 </script>
 
 <style>
-.link_logout,
+/* .link_logout,
 .create_chat,
 .vertical {
   display: none;
-}
+} */
 .link_login,
 .link_registration {
   display: flex;

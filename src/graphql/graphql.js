@@ -23,6 +23,10 @@ export const USER_INFO = gql`  query me {
       id
       username
       timestamp
+      rooms{
+        id
+        name
+      }
       currentRoom {
         id
         name   

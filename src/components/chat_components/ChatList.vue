@@ -20,7 +20,6 @@
 <script>
 import ChatListElement from "./chat_list_components/ChatListElement";
 import { JOIN_ROOM } from "@/graphql/graphql.js";
-import { USER_INFO } from "../../graphql/graphql";
 
 export default {
   name: "ChatList",
@@ -41,14 +40,6 @@ export default {
           id: chat_id,
         },
       });
-      console.log("JOINED");
-      const user_info = await this.$apollo.query({
-        query: USER_INFO,
-      });
-
-      console.log(user_info);
-      console.log("Current room");
-      console.log(user_info.data.me.currentRoom);
       this.$emit("chat-clicked", {
         data: chat_info.data,
       });

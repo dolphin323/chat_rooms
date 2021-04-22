@@ -24,8 +24,8 @@
           <slot name="body">
             <div class="error" v-if="error">Empty string</div>
             <div class="error" v-if="error_name">
-              Chat with such name
-              <p>is already exists</p>
+              Chat with such name is
+              <p>already exists</p>
             </div>
             <input class="chat_name_input" type="text" v-model="current"
           /></slot>
@@ -64,14 +64,19 @@ export default {
       rooms: [],
       error: false,
       current: "",
-      errom_name: false,
+      error_name: false,
     };
   },
   created() {
     this.current = this.current_room_name;
   },
   watch: {
+    current: function () {
+      this.error_name = false;
+      this.error = false;
+    },
     current_room_name: function () {
+      this.error_name = false;
       this.current = this.current_room_name;
     },
   },
@@ -79,12 +84,12 @@ export default {
     async close() {
       this.error = false;
       this.current = this.current_room_name;
-      this.errom_name = false;
+      this.error_name = false;
       this.$emit("close");
     },
     async RenameChat() {
       if (this.current) {
-        this.errom_name = false;
+        this.error_name = false;
         this.error = false;
         const user_info = await this.$apollo.query({
           fetchPolicy: "no-cache",
@@ -101,7 +106,7 @@ export default {
           this.current = "";
           this.close();
         } catch (err) {
-          this.errom_name = true;
+          this.error_name = true;
         }
       } else {
         this.error = true;
@@ -113,6 +118,10 @@ export default {
 </script>
 
 <style scoped>
+.error {
+  font-size: 15px;
+  text-align: left;
+}
 .modal-backdrop {
   z-index: 1;
   position: fixed;

@@ -22,7 +22,8 @@
         </header>
         <section class="modal-body" id="modalDescription">
           <slot name="body">
-            <input class="chat_name_input" type="text" v-model="chat_name"
+            <div class="error" v-if="error">Empty string</div>
+            <input class="chat_name_input" type="text" v-model="current"
           /></slot>
         </section>
         <footer class="modal-footer">
@@ -53,33 +54,48 @@
 import { UPDATE_ROOM, USER_INFO } from "@/graphql/graphql.js";
 export default {
   name: "ModalRenameChat",
+  props: ["current_room_name"],
   data() {
     return {
-      chat_name: "",
       rooms: [],
+      error: false,
+      current: "",
     };
   },
+  created() {
+    this.current = this.current_room_name;
+  },
+  watch: {
+    current_room_name: function () {
+      this.current = this.current_room_name;
+    },
+  },
   methods: {
-    close() {
+    async close() {
+      this.error = false;
+      this.current = this.current_room_name;
       this.$emit("close");
     },
     async RenameChat() {
-      if (this.chat_name) {
+      if (this.current) {
+        this.error = false;
         const user_info = await this.$apollo.query({
           fetchPolicy: "no-cache",
           query: USER_INFO,
         });
-        await this.$apollo.mutate({
-          mutation: UPDATE_ROOM,
-          variables: {
-            id: user_info.data.me.currentRoom.id,
-            name: this.chat_name,
-          },
-        });
-        this.chat_name = "";
-        this.close();
+        try {
+          await this.$apollo.mutate({
+            mutation: UPDATE_ROOM,
+            variables: {
+              id: user_info.data.me.currentRoom.id,
+              name: this.current,
+            },
+          });
+          this.current = "";
+          this.close();
+        } catch (err) {}
       } else {
-        console.log("Empty string");
+        this.error = true;
       }
     },
   },

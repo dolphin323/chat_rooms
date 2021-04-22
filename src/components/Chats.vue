@@ -1,6 +1,10 @@
 <template>
   <div>
-    <ModalChangeRoomName v-show="isModalVisible" @close="closeModal" />
+    <ModalChangeRoomName
+      v-show="isModalVisible"
+      @close="closeModal"
+      :current_room_name="current_room_name"
+    />
     <div class="chats_block">
       <div class="chats">
         <ChatList
@@ -166,7 +170,12 @@ export default {
     this.width_box = this.$refs.infoBox.clientWidth;
   },
   methods: {
-    showModal() {
+    async showModal() {
+      const me = await this.$apollo.query({
+        fetchPolicy: "no-cache",
+        query: USER_INFO,
+      });
+      this.current_room_name = me.data.me.currentRoom.name;
       this.isModalVisible = true;
     },
     closeModal() {

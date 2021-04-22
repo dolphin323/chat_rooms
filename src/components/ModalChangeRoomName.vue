@@ -23,6 +23,10 @@
         <section class="modal-body" id="modalDescription">
           <slot name="body">
             <div class="error" v-if="error">Empty string</div>
+            <div class="error" v-if="error_name">
+              Chat with such name
+              <p>is already exists</p>
+            </div>
             <input class="chat_name_input" type="text" v-model="current"
           /></slot>
         </section>
@@ -60,6 +64,7 @@ export default {
       rooms: [],
       error: false,
       current: "",
+      errom_name: false,
     };
   },
   created() {
@@ -74,10 +79,12 @@ export default {
     async close() {
       this.error = false;
       this.current = this.current_room_name;
+      this.errom_name = false;
       this.$emit("close");
     },
     async RenameChat() {
       if (this.current) {
+        this.errom_name = false;
         this.error = false;
         const user_info = await this.$apollo.query({
           fetchPolicy: "no-cache",
@@ -93,9 +100,12 @@ export default {
           });
           this.current = "";
           this.close();
-        } catch (err) {}
+        } catch (err) {
+          this.errom_name = true;
+        }
       } else {
         this.error = true;
+        this.errom_name = false;
       }
     },
   },

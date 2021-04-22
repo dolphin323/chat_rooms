@@ -20,6 +20,14 @@ export default {
 </script>
 
 <style>
+* {
+  font-family: "Didot", serif;
+}
+
+button,
+input {
+  outline: none !important;
+}
 #app {
   width: 100%;
   height: 100%;

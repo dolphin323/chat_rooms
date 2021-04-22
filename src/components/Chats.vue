@@ -136,25 +136,6 @@ export default {
           this.members.splice(right_index, 1);
         },
       },
-      // change_room: {
-      //   query: SUB_ROOM_CHANGED,
-      //   result({ data }) {
-      //     console.log("Here change");
-      //     console.log(data);
-      // const user_info = await this.$apollo.query({
-      //   query: USER_INFO,
-      // });
-      // const info = data.data.joinRoom;
-      // this.messages = info.lastMessages;
-      // this.members = info.members;
-      // this.owner = info.owner;
-      // if (user_info.data.me.id === this.owner.id) {
-      //   this.display_owner_buttons = true;
-      // }
-      // this.display_chat = true;
-      // this.display_list = false;
-      // },
-      //},
     },
   },
   components: {
@@ -396,10 +377,7 @@ export default {
   top: 20%;
   overflow: hidden;
 }
-/* .left_chat,
-.delete_chat {
-  margin-bottom: 5px;
-} */
+
 .left_chat,
 .delete_chat,
 .rename_chat {
@@ -407,7 +385,6 @@ export default {
   justify-content: center;
   width: 100%;
   font-size: inherit;
-  /* border: 2px solid; */
   background-color: #323232;
   padding: 15px;
   border-radius: 1em;

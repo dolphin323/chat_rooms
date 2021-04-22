@@ -2,6 +2,7 @@
   <div class="login">
     <div class="block">
       <span class="log_title">Login</span>
+      <div class="error" v-if="error">No user with such data</div>
       <form class="login_form" @submit.prevent="LoginUser">
         <div class="form_group">
           <p>Login</p>
@@ -43,6 +44,7 @@ export default {
       password: "",
       exists: false,
       token: "",
+      error: false,
     };
   },
   methods: {
@@ -63,7 +65,10 @@ export default {
             },
           });
           await onLogin(this.$apollo.provider.defaultClient, token.data.token);
+          this.error = false;
           this.$router.push("/chats");
+        } else {
+          this.error = true;
         }
       } catch (err) {
         console.log(err);
@@ -74,11 +79,12 @@ export default {
 </script>
 
 <style>
-/* .link_logout,
-.create_chat,
-.vertical {
-  display: none;
-} */
+.error {
+  margin-top: 5px;
+  font-size: 20px;
+  color: rgb(190, 37, 37);
+  text-align: center;
+}
 .link_login,
 .link_registration {
   display: flex;
@@ -99,7 +105,6 @@ export default {
   padding: 20px;
   padding-top: 30px;
   width: 300px;
-  /* height: 450px; */
   border-radius: 1em;
   margin-right: -50%;
   transform: translate(-50%, -50%);
@@ -130,6 +135,7 @@ export default {
   justify-content: center;
 }
 .btn {
+  outline: none;
   padding: 0.3em 1.2em;
   border: 0.16em solid rgba(255, 255, 255, 0);
   border-radius: 2em;

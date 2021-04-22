@@ -3,6 +3,7 @@
     <div class="chat_h2">
       <h2>Chats</h2>
     </div>
+    <input type="text" v-model="search" class="search" />
     <div class="chat_list">
       <div v-for="room in rooms" :key="room.id">
         <ChatListElement
@@ -11,6 +12,7 @@
           :chat_id="room.id"
           :owner_id="room.owner.id"
           :user_id="user_id"
+          v-if="(room.name.includes(search) && search !== '') || search === ''"
         />
       </div>
     </div>
@@ -27,8 +29,14 @@ export default {
   data() {
     return {
       active: false,
+      search: "",
     };
   },
+  // watch: {
+  //   search: function () {
+  //     this.rooms = this.rooms.filter((room) => room.name.includes(this.search));
+  //   },
+  // },
   components: {
     ChatListElement,
   },
@@ -49,10 +57,18 @@ export default {
 </script>
 
 <style scoped>
+input.search {
+  margin-bottom: 10px;
+  width: 95%;
+  padding: 5px;
+  border: 1px solid;
+  font-size: larger;
+  border-radius: 1rem;
+}
 .chat_list {
   grid-area: chat_list;
   overflow-y: auto;
-  height: 85%;
+  height: 80%;
   position: absolute;
   width: 18%;
 }

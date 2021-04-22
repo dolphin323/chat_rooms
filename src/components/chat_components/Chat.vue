@@ -11,9 +11,11 @@
                 norm_date.getHours() +
                 ':' +
                 norm_date.getMinutes() +
+                ':' +
+                norm_date.getSeconds() +
                 ' ' +
                 norm_date.getDate() +
-                '/' +
+                '-' +
                 (norm_date.getMonth() + 1)
               );
             })()

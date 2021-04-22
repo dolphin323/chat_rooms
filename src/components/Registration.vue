@@ -2,6 +2,9 @@
   <div class="registration">
     <div class="block">
       <span class="reg_title">Registration</span>
+      <div v-if="!IsPasswordSame" class="error">Passwords are different</div>
+      <div v-if="IsUserExists" class="error">Choose another login</div>
+
       <form class="registration_form" @submit.prevent="RegistrUser">
         <div class="form_group">
           <p>Login</p>
@@ -33,8 +36,6 @@
             requireds
           />
         </div>
-        <h2 v-if="!IsPasswordSame">Passwords are different</h2>
-        <h2 v-if="IsUserExists">Choose another login</h2>
         <div class="form_btn">
           <button class="registration_btn btn">Sign Up</button>
         </div>
@@ -84,7 +85,6 @@ export default {
               password: this.password,
             },
           });
-          //console.log("Registrated!!");
           const token = await this.$apollo.query({
             query: LOGIN,
             variables: {
@@ -104,14 +104,13 @@ export default {
 </script>
 
 
-<style>
-/* .link_logout,
-.create_chat {
-  display: none;
-} */
-</style>
-
 <style scoped>
+.error {
+  margin-top: 5px;
+  font-size: 20px;
+  color: rgb(190, 37, 37);
+  text-align: center;
+}
 .registration .block {
   margin: 0;
   position: absolute;
@@ -157,7 +156,6 @@ export default {
   border-radius: 2em;
   box-sizing: border-box;
   text-decoration: none;
-  font-family: "Roboto", sans-serif;
   font-weight: 300;
   color: #181717;
   text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);

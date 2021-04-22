@@ -1,6 +1,6 @@
 <template>
-  <div class="chat_list_element">
-    <div class="info" @click="$emit('join-chat', chat_id)">
+  <div class="chat_list_element" @click="$emit('join-chat', chat_id)">
+    <div class="info">
       <div class="chat_photo" :style="'background-color: ' + color">
         {{ chat_name[0] }}
       </div>
@@ -27,8 +27,19 @@ export default {
     };
   },
   created() {
-    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-    this.color = "#" + randomColor;
+    /*Random colors
+    // const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    // this.color = "#" + randomColor;
+    */
+    //Random light colors
+    this.color =
+      "hsl(" +
+      360 * Math.random() +
+      "," +
+      (25 + 70 * Math.random()) +
+      "%," +
+      (85 + 10 * Math.random()) +
+      "%)";
   },
 };
 </script>
@@ -47,13 +58,14 @@ export default {
 .chat_list_element {
   width: inherit;
   overflow: hidden;
-  margin-bottom: 5px;
+  padding: 3px;
   display: flex;
   justify-content: space-between;
 }
 .chat_list_element:hover,
 .info.true {
-  background-color: rgb(242, 225, 245);
+  border: 1px solid;
+  border-radius: 2em;
 }
 .chat_list_element img {
   width: 40px;

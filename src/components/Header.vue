@@ -34,13 +34,15 @@
           up</router-link
         >
       </div>
-      <div class="link_logout" v-if="isLogoutButtonVisible" @click="LogOut">
-        <router-link to="/login" class="button logout">
-          <span class="button__line button__line--top"></span>
-          <span class="button__line button__line--right"></span>
-          <span class="button__line button__line--bottom"></span>
-          <span class="button__line button__line--left"></span>
-          Logout</router-link
+      <div class="link_logout" v-if="isLogoutButtonVisible">
+        <a href="/login" class="button logout" @click="LogOut">
+          <span>
+            <span class="button__line button__line--top"></span>
+            <span class="button__line button__line--right"></span>
+            <span class="button__line button__line--bottom"></span>
+            <span class="button__line button__line--left"></span>
+            Logout
+          </span></a
         >
       </div>
     </div>
@@ -66,7 +68,6 @@ export default {
   },
 
   created() {
-    //console.log(this.$router.currentRoute);
     if (
       this.$router.currentRoute.path === "/login" ||
       this.$router.currentRoute.path === "/registration"
@@ -105,24 +106,6 @@ export default {
       }
     },
   },
-  // updated() {
-  //   console.log(this.$router.currentRoute);
-  //   if (
-  //     this.$router.currentRoute.path === "/login" ||
-  //     this.$router.currentRoute.path === "/registration"
-  //   ) {
-  //     this.isLoginButtonVisible = true;
-  //     this.isRegistrationButtonVisible = true;
-  //     this.isCreateButtonVisible = false;
-  //     this.isLogoutButtonVisible = false;
-  //   }
-  //   if (this.$router.currentRoute.path === "/chats") {
-  //     this.isLoginButtonVisible = false;
-  //     this.isRegistrationButtonVisible = false;
-  //     this.isCreateButtonVisible = true;
-  //     this.isLogoutButtonVisible = true;
-  //   }
-  // },
   methods: {
     showModal() {
       this.isModalVisible = true;
@@ -130,14 +113,15 @@ export default {
     closeModal() {
       this.isModalVisible = false;
     },
-    LogOut() {
+    async LogOut() {
       console.log("Here");
       this.isCreateButtonVisible = false;
       this.isLogoutButtonVisible = false;
       this.isLoginButtonVisible = true;
       this.isRegistrationButtonVisible = true;
-      onLogout(this.$apollo.provider.defaultClient);
-      //this.$router.push("/login");
+      await onLogout(this.$apollo.provider.defaultClient);
+      await this.$apollo.provider.defaultClient.resetStore();
+      this.$router.push("/login");
     },
   },
 };

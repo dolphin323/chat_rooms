@@ -9,17 +9,17 @@ export default new Router({
     mode: 'history',
     routes: [
         {
-            path: '/registration',
+            path: '/chat_rooms.github.io/registration',
             component: Registration
         },
         {
-            path: '/login',
+            path: '/chat_rooms.github.io/login',
             component: Login
         },
         {
-            path: '/chats',
+            path: '/chat_rooms.github.io/chats',
             component: () => import('@/components/Chats')
         },
-        { path: "*", component: () => import('@/components/PageNotFound') }
+        { path: "/chat_rooms.github.io/*", component: () => import('@/components/PageNotFound') }
     ]
 })

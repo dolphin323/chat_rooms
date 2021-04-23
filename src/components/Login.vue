@@ -50,6 +50,7 @@ export default {
   methods: {
     async LoginUser() {
       try {
+        this.error = false;
         const answer = await this.$apollo.query({
           query: CHECK_USERNAME,
           variables: {

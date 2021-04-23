@@ -113,7 +113,7 @@ export default {
             fetchPolicy: "no-cache",
             query: USER_INFO,
           });
-          if (data.roomDeleted.id === me.data.me.currentRoom.id) {
+          if (!me.data.me.currentRoom) {
             this.display_chat = false;
             this.display_list = true;
           }

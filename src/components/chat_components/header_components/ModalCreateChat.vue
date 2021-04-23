@@ -66,6 +66,12 @@ export default {
       rooms: [],
     };
   },
+  watch: {
+    chat_name: function () {
+      this.error_name = false;
+      this.error = false;
+    },
+  },
   methods: {
     close() {
       this.$emit("close");

@@ -103,14 +103,20 @@ export default {
       },
       delete_room: {
         query: SUB_ROOM_DELETED,
-        result({ data }) {
+        async result({ data }) {
           let right_index = -1;
           this.rooms.forEach((item, index) =>
             item.id === data.roomDeleted.id ? (right_index = index) : ""
           );
           this.rooms.splice(right_index, 1);
-          this.display_chat = false;
-          this.display_list = true;
+          const me = await this.$apollo.query({
+            fetchPolicy: "no-cache",
+            query: USER_INFO,
+          });
+          if (data.roomDeleted.id === me.data.me.currentRoom.id) {
+            this.display_chat = false;
+            this.display_list = true;
+          }
         },
       },
       rename_room: {

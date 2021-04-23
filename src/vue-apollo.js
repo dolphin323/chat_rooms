@@ -1,15 +1,14 @@
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 import { createApolloClient, restartWebsockets } from 'vue-cli-plugin-apollo/graphql-client'
-
+require('dotenv').config();
 // Install the vue plugin
 Vue.use(VueApollo)
-
-// Name of the localStorage item
+//Name of the localStorage item
 const AUTH_TOKEN = 'apollo-token'
 
 // Http endpoint
-const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP || 'https://webprogbase-lab6-graphql.herokuapp.com/'
+const httpEndpoint = process.env.VUE_APP_GRAPHQL_HTTP || ''
 
 // Config
 const defaultOptions = {
@@ -21,7 +20,7 @@ const defaultOptions = {
   persisting: false,
   // You can use `wss` for secure connection (recommended in production)
   // Use `null` to disable subscriptions
-  wsEndpoint: process.env.VUE_APP_GRAPHQL_WS || 'wss://webprogbase-lab6-graphql.herokuapp.com/graphql',
+  wsEndpoint: process.env.VUE_APP_GRAPHQL_WS || '',
   // Use websockets for everything (no HTTP)
   // You need to pass a `wsEndpoint` for this to work
   websocketsOnly: false,

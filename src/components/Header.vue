@@ -121,6 +121,7 @@ export default {
       this.isRegistrationButtonVisible = true;
       await onLogout(this.$apollo.provider.defaultClient);
       await this.$apollo.provider.defaultClient.resetStore();
+      console.log("To login");
       this.$router.push("/login");
     },
   },

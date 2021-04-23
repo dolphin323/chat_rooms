@@ -35,7 +35,7 @@
         >
       </div>
       <div class="link_logout" v-if="isLogoutButtonVisible">
-        <a href="/login" class="button logout" @click="LogOut">
+        <a href="/login" class="button logout" @click.prevent="LogOut">
           <span>
             <span class="button__line button__line--top"></span>
             <span class="button__line button__line--right"></span>

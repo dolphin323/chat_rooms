@@ -22,6 +22,11 @@
         </header>
         <section class="modal-body" id="modalDescription">
           <slot name="body">
+            <div class="error" v-if="error">Empty string</div>
+            <div class="error" v-if="error_name">
+              Chat with such name is
+              <p>already exists</p>
+            </div>
             <input class="chat_name_input" type="text" v-model="chat_name"
           /></slot>
         </section>
@@ -55,7 +60,9 @@ export default {
   name: "ModalCreateChat",
   data() {
     return {
+      error: false,
       chat_name: "",
+      error_name: false,
       rooms: [],
     };
   },
@@ -65,16 +72,23 @@ export default {
     },
     async CreateChat() {
       if (this.chat_name) {
-        await this.$apollo.mutate({
-          mutation: CREATE_ROOM,
-          variables: {
-            room_name: this.chat_name,
-          },
-        });
-        this.chat_name = "";
-        this.close();
+        this.error_name = false;
+        this.error = false;
+        try {
+          await this.$apollo.mutate({
+            mutation: CREATE_ROOM,
+            variables: {
+              room_name: this.chat_name,
+            },
+          });
+          this.chat_name = "";
+          this.close();
+        } catch (err) {
+          this.error_name = true;
+        }
       } else {
-        console.log("Empty string");
+        this.error = true;
+        this.errom_name = false;
       }
     },
   },

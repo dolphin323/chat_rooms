@@ -71,7 +71,7 @@ export default {
           this.error = true;
         }
       } catch (err) {
-        console.log(err);
+        this.error = true;
       }
     },
   },

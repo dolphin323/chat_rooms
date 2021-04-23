@@ -109,6 +109,8 @@ export default {
             item.id === data.roomDeleted.id ? (right_index = index) : ""
           );
           this.rooms.splice(right_index, 1);
+          this.display_chat = false;
+          this.display_list = true;
         },
       },
       rename_room: {

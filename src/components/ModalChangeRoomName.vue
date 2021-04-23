@@ -110,7 +110,7 @@ export default {
         }
       } else {
         this.error = true;
-        this.errom_name = false;
+        this.error_name = false;
       }
     },
   },
